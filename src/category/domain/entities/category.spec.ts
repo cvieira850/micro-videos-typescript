@@ -1,5 +1,6 @@
-import { Category } from './category'
+import { Category, CategoryProperties } from './category'
 
+import {validate} from 'uuid'
 describe('Category Unit Tests', () => {
     it('Constructor of category', () => {
       const props = {
@@ -54,6 +55,24 @@ describe('Category Unit Tests', () => {
         is_active: true,
         created_at: expect.any(Date)
       })
+    })
+
+    it('id field', () => {
+      type CategoryData = { props: CategoryProperties, id?: string }
+      const data: CategoryData[] = [
+        { props: {name: 'Movie'} },
+        { props: {name: 'Movie'}, id: null},
+        { props: {name: 'Movie'}, id: undefined},
+        { props: {name: 'Movie'}, id: 'ea0c656f-4c61-4d1e-ac75-de07bee52731'},
+      ]
+
+      data.forEach( i => {
+        const  category = new Category(i.props, i.id)
+        expect(category.id).toBeDefined()
+        expect(category.id).toBeTruthy()
+        expect(validate(category.id)).toBeTruthy()
+      })
+
     })
 
     it('Getters of name field', () => {
